@@ -1,0 +1,12 @@
+#!/bin/sh
+# Script written by Cristan Szmajda 
+
+if [ $# -eq 0 ]; then
+        echo "Usage: undos "
+fi
+
+for file
+do
+tr -d '\015' <$file >/tmp/.undos.$$
+mv /tmp/.undos.$$ $file
+done
