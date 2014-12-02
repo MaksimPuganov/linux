@@ -34,7 +34,8 @@ show: foreach my $row (@{$rows{'rows'}}) {
 		if ($link eq $path) {
 			# touch existing mtime for soft link, so its not deleted later
 			system("touch -h \"$file\"");
-			# found existing link, so skip to next show
+
+			# skip to next show, as we don't need to recreate the link.
 		    next show;
 		}
 	}
@@ -53,13 +54,14 @@ show: foreach my $row (@{$rows{'rows'}}) {
     }
     $name .= $suffix;
 
-	print "New link required for $name\n";
+	print "New link $dirname/$name -> ".$show->{'local_path'}."\n";
 
 	symlink $show->{'local_path'}, "$dirname/$name"
        or die "Can't create symlink $dirname/$name:  $!\n";
 }
 
-# now lets go and cleanup all symlinks which are dead, or were not touched
+# now lets go and cleanup all symlinks which were not touched during the process
+# these will either be dead symlinks, or deleted recordings.
 find(\&cleanup_old_links, ".");
 
 sub cleanup_old_links {
