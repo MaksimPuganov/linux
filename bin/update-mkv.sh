@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# based on http://www.makemkv.com/forum2/viewtopic.php?f=3&t=9451
+
 version=$(curl "http://www.makemkv.com/forum2/viewtopic.php?f=3&t=224" -s | awk 'FNR == 160 {print $4}')
 
 # check if makemkvcon even exists
