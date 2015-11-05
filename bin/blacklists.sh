@@ -8,7 +8,8 @@ set -e
 # variables
 TARGET=/tmp/ufdbguard
 TMPDIR=$TARGET/bl-final
-SADIR=/usr/local/ufdbguard/blacklists
+UFDB_HOME=/usr/local/ufdbguard
+BLACKLISTS=$UFDB_HOME/blacklists
 
 # merge lists
 merge_bl() {
@@ -128,23 +129,21 @@ add_bl blacklists "$TMPDIR"
 
 if [ -d "$TMPDIR" ]; then
 	# ignore missing existing dir
-	if [ -d "$SADIR" ]; then
-		mv "$SADIR" "$SADIR.$$" 
+	if [ -d "$BLACKLISTS" ]; then
+		mv "$BLACKLISTS" "$BLACKLISTS.$$" 
 	fi
 
-	mv "$TMPDIR" "$SADIR" 
+	mv "$TMPDIR" "$BLACKLISTS" 
 	rm -rf "$TARGET"
 
-	if [ -d "$SADIR.$$" ]; then
-		rm -rf "$SADIR.$$"
+	if [ -d "$BLACKLISTS.$$" ]; then
+		rm -rf "$BLACKLISTS.$$"
 	fi
 
-	
+	ln -s $UFDB_HOME/blacklist_exceptions/alwaysallow/ $BLACKLISTS
+	ln -s $UFDB_HOME/blacklist_exceptions/alwaysblock/ $BLACKLISTS
 
-	ln -s $TARGET/blacklist_exceptions/alwaysallow/ $SADIR
-	ln -s $TARGET/blacklist_exceptions/alwaysblock/ $SADIR
-
-	chown -R ufdb:ufdb $SADIR
+	chown -R ufdb:ufdb $BLACKLISTS
 fi
 
 
