@@ -6,10 +6,9 @@
 set -e
 
 # variables
-TARGET=/usr/local/ufdbguard
-TMPDIR=bl-final
-SADIR=$TARGET/blacklists
-LOCKFILE=/var/lock/ufdbguard-black-gen.lock
+TARGET=/tmp/ufdbguard
+TMPDIR=$TARGET/bl-final
+SADIR=/usr/local/ufdbguard/blacklists
 
 # merge lists
 merge_bl() {
@@ -64,49 +63,83 @@ add_bl() {
 	rm -rf "$SRCDIR"
 }
 
-cd "$TARGET"
-
-if [ $# -eq 0 ]; then
-	# cleanup
-	rm -rf "$TMPDIR" *tgz *tar.gz
-	mkdir "$TMPDIR"
-
-	# mesd
-	wget http://squidguard.mesd.k12.or.us/blacklists.tgz
-	tar -xvf blacklists.tgz
-	rm -f blacklists.tgz
-	add_bl blacklists "$TMPDIR"
-
-	# shalla
-	wget http://www.shallalist.de/Downloads/shallalist.tar.gz
-	tar -xzf shallalist.tar.gz
-	rm -f shallalist.tar.gz
-	add_bl BL "$TMPDIR"
-
-	# touloise
-	wget ftp://ftp.univ-tlse1.fr/pub/reseau/cache/squidguard_contrib/blacklists.tar.gz
-	tar -xvf blacklists.tar.gz
-	rm -f blacklists.tar.gz
-	add_bl blacklists "$TMPDIR"
+if [ -d "$TARGET" ]; then
+	rm -rf $TARGET
 fi
 
-if [ -d "$TARGET/$TMPDIR" ]; then
+mkdir $TARGET
+cd "$TARGET"
+
+# cleanup
+rm -rf "$TMPDIR" *tgz *tar.gz
+mkdir "$TMPDIR"
+
+# shalla
+#wget http://www.shallalist.de/Downloads/shallalist.tar.gz
+wget http://192.168.0.5/blacklists/shallalist.tar.gz
+tar -xzf shallalist.tar.gz
+rm -f shallalist.tar.gz
+cd BL
+mv adv ads
+mv spyware malware 
+cd ..
+add_bl BL "$TMPDIR"
+
+# touloise
+#wget ftp://ftp.univ-tlse1.fr/pub/reseau/cache/squidguard_contrib/blacklists.tar.gz
+wget http://192.168.0.5/blacklists/blacklists.tar.gz
+tar -xvf blacklists.tar.gz
+rm -f blacklists.tar.gz
+
+cd blacklists
+rm ads
+mv publicite ads
+rm aggressive
+mv agressif aggressive
+rm drugs
+mv drogue drugs
+rm porn
+mv adult porn
+rm violence
+rm mail
+mv forums forum
+mv gambling gamble
+mv financial finance
+mv radio radiotv
+mv press news
+mv remote-control remotecontrol
+mv social_networks socialnet
+mv shortener urlshortener
+mv update updatesites
+mv associations_religieuses religion
+mv download downloads
+rm -rf reaffected
+rm -rf liste_blanche
+rm -rf liste_bu
+rm -rf tricheur
+rm -rf arjel
+mv dangerous_material dangermat
+mv sexual_education sex_ed
+mv strict_redirector strict_redir
+mv strong_redirector strong_redir
+cd ..
+
+add_bl blacklists "$TMPDIR"
+
+if [ -d "$TMPDIR" ]; then
 	# ignore missing existing dir
 	if [ -d "$SADIR" ]; then
 		mv "$SADIR" "$SADIR.$$" 
 	fi
 
-	mv "$TARGET/$TMPDIR" "$SADIR" 
-	rm -rf "$TARGET/$TMPDIR"
+	mv "$TMPDIR" "$SADIR" 
+	rm -rf "$TARGET"
 
 	if [ -d "$SADIR.$$" ]; then
 		rm -rf "$SADIR.$$"
 	fi
 
-	mv $SADIR/dangerous_material/ $SADIR/dangermat
-	mv $SADIR/sexual_education/ $SADIR/sex_ed
-	mv $SADIR/strict_redirector/ $SADIR/strict_redir
-	mv $SADIR/strong_redirector/ $SADIR/strong_redir
+	
 
 	ln -s $TARGET/blacklist_exceptions/alwaysallow/ $SADIR
 	ln -s $TARGET/blacklist_exceptions/alwaysblock/ $SADIR
@@ -114,19 +147,4 @@ if [ -d "$TARGET/$TMPDIR" ]; then
 	chown -R ufdb:ufdb $SADIR
 fi
 
-
-find $SADIR -mindepth 1 -maxdepth 1 -type d -printf '%f\n' | while read table; do
-    [ -f $SADIR/${table}/domains ] || continue
-
-    myparams="-W -t $table -d $SADIR/${table}/domains"
-    [ -f $SADIR/urls ] && myparams="${myparams} -u $SADIR/${table}/urls"
-
-    $TARGET/bin/ufdbGenTable ${myparams} || exit=1
-done
- 
-sudo $TARGET/bin/ufdbConvertDB -d $SADIR
-
-sudo /usr/local/bin/restartproxy
-
-exit $exit
 
