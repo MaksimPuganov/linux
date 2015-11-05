@@ -2,6 +2,8 @@
 
 # based on http://www.makemkv.com/forum2/viewtopic.php?f=3&t=9451
 
+sudo apt-get -y install build-essential pkg-config libc6-dev libssl-dev libexpat1-dev libavcodec-dev libgl1-mesa-dev libqt4-dev
+
 version=$(curl "http://www.makemkv.com/forum2/viewtopic.php?f=3&t=224" -s | awk 'FNR == 160 {print $4}')
 
 # check if makemkvcon even exists
