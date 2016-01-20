@@ -1,0 +1,25 @@
+version: 1
+
+dn: uid=admin,o=starfleet.com
+objectClass: organizationalPerson
+objectClass: person
+objectClass: inetOrgPerson
+objectClass: top
+cn: picard
+givenName: Admin
+mail: admin@starfleet.com
+sn: User
+uid: admin
+userPassword: secret
+
+dn: cn=AdminUsers,o=starfleet.com
+objectClass: groupOfUniqueNames
+objectClass: top
+cn: AdminUsers
+uniqueMember: uid=admin,o=starfleet.com
+
+dn: o=starfleet.com
+changetype: modify
+add: aci
+aci: (targetattr = "*") (target = "ldap:///o=starfleet.com") (version 3.0; acl "Starfleet Administrator"; allow (all) (groupdn = "ldap:///cn=AdminUsers,o=starfleet.com");)
+
