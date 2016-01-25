@@ -1,0 +1,27 @@
+
+wget http://www.lighterra.com/mythtvchannelicons/mythtvchannelicons-201207.tar.bz2
+
+diff --git a/install.sh b/install.sh
+index d7310b0..ab64313 100755
+--- a/install.sh
++++ b/install.sh
+@@ -49,8 +49,10 @@ mysql mythconverg << EOF
+     UPDATE channel SET icon = "$ICONDIR/SBS-One.png"     WHERE channum =  3;
+     UPDATE channel SET icon = "$ICONDIR/SBS-One.png"     WHERE channum = 30;
+     UPDATE channel SET icon = "$ICONDIR/SBS-Two.png"     WHERE channum = 32;
++    UPDATE channel SET icon = "$ICONDIR/SBS-One.png"     WHERE channum = 33;
+     UPDATE channel SET icon = "$ICONDIR/7.png"           WHERE channum =  7;
+     UPDATE channel SET icon = "$ICONDIR/7.png"           WHERE channum = 70;
++    UPDATE channel SET icon = "$ICONDIR/7.png"           WHERE channum = 71;
+     UPDATE channel SET icon = "$ICONDIR/7-Two.png"       WHERE channum = 72;
+     UPDATE channel SET icon = "$ICONDIR/7-Two.png"       WHERE channum = 62;
+     UPDATE channel SET icon = "$ICONDIR/7mate.png"       WHERE channum = 73;
+@@ -74,6 +76,7 @@ mysql mythconverg << EOF
+     UPDATE channel SET icon = "$ICONDIR/Prime.png"       WHERE channum = 60;
+     UPDATE channel SET icon = "$ICONDIR/NBN.png"         WHERE channum =  8;
+     UPDATE channel SET icon = "$ICONDIR/SC-Ten.png"      WHERE channum =  5;
++    UPDATE channel SET icon = "$ICONDIR/channel31.png"      WHERE channum =  44;
+ EOF
+ echo "done."
+ 
+
