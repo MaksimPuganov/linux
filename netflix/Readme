@@ -1,0 +1,15 @@
+1) A micro AWS instance of ubuntu 14.04 Server (Smallest image you can create)
+
+2) sudo apt-get -qq update
+3) sudo apt-get -y install python-software-properties \
+    && add-apt-repository ppa:dlundquist/sniproxy \
+    && apt-get update && apt-get -y install sniproxy
+
+4) upload the sniproxy.conf to /etc
+
+5) Change /etc/defaults/sniproxy
+ENABLED=1
+
+6) sudo service sniproxy start
+
+7) Call switch.sh REGION
