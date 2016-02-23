@@ -5,8 +5,6 @@ if [ "$UID" != "0" ]; then
 	exit 1
 fi
 
-set -e
-
 function setupOracleJre() {
 	wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" \
 	"http://download.oracle.com/otn-pub/java/jdk/7u80-b15/jre-7u80-linux-x64.rpm"
@@ -28,7 +26,8 @@ function disableSecurity() {
 function installBasePackages() {
 	yum clean all
 
-	yum install -y telnet unzip curl wget
+	# freetds / libaio for oracle sql server
+	yum install -y telnet unzip curl wget freetds libaio subversion 
 	yum update -y
 }
 
