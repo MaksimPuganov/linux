@@ -1,3 +1,6 @@
+Create AWS SNI Proxy Image
+--------------------------
+
 1) A micro AWS instance of ubuntu 14.04 Server (Smallest image you can create)
 
 2) sudo apt-get -qq update
@@ -12,4 +15,8 @@ ENABLED=1
 
 6) sudo service sniproxy start
 
-7) Call switch.sh REGION
+
+Workflow for use
+----------------
+
+Use the manage-aws-instance.sh and switch.sh to bring instance up (either region), and configure local dnsmasq to point at it
