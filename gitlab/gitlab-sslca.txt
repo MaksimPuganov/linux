@@ -1,0 +1,11 @@
+http://www.bonusbits.com/wiki/HowTo:Generate_Self-Signed_SSL_Certificate_with_OpenSSL
+
+
+sudo openssl genrsa -des3 -out /etc/gitlab/ssl/10.208.18.43.key 2048
+sudo openssl req -new -key /etc/gitlab/ssl/10.208.18.43.key -out /etc/gitlab/ssl/10.208.18.43.csr
+sudo cp -v /etc/gitlab/ssl/10.208.18.43.{key,original}
+sudo openssl rsa -in /etc/gitlab/ssl/10.208.18.43.original -out /etc/gitlab/ssl/10.208.18.43.key
+sudo rm -v /etc/gitlab/ssl/10.208.18.43.original
+sudo openssl x509 -req -days 1460 -in /etc/gitlab/ssl/10.208.18.43.csr -signkey /etc/gitlab/ssl/10.208.18.43.key -out /etc/gitlab/ssl/10.208.18.43.crt
+sudo rm -v /etc/gitlab/ssl/10.208.18.43.csr
+sudo chmod 600 /etc/gitlab/ssl/10.208.18.43.*
