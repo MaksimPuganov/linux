@@ -1,3 +1,0 @@
-#!/bin/bash
-
-ssh -i /home/jason/.ssh/id_rsa_test $1 $2
