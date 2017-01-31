@@ -8,7 +8,7 @@ set -e
 # variables
 TARGET=/tmp/ufdbguard
 TMPDIR=$TARGET/bl-final
-UFDB_HOME=/usr/local/ufdbguard
+#UFDB_HOME=/usr/local/ufdbguard
 BLACKLISTS=$UFDB_HOME/blacklists
 
 # merge lists
@@ -76,8 +76,8 @@ rm -rf "$TMPDIR" *tgz *tar.gz
 mkdir "$TMPDIR"
 
 # shalla
-#wget http://www.shallalist.de/Downloads/shallalist.tar.gz
-wget http://192.168.0.5/blacklists/shallalist.tar.gz
+wget http://www.shallalist.de/Downloads/shallalist.tar.gz
+#wget http://192.168.0.5/blacklists/shallalist.tar.gz
 tar -xzf shallalist.tar.gz
 rm -f shallalist.tar.gz
 cd BL
@@ -87,8 +87,8 @@ cd ..
 add_bl BL "$TMPDIR"
 
 # touloise
-#wget ftp://ftp.univ-tlse1.fr/pub/reseau/cache/squidguard_contrib/blacklists.tar.gz
-wget http://192.168.0.5/blacklists/blacklists.tar.gz
+wget ftp://ftp.univ-tlse1.fr/pub/reseau/cache/squidguard_contrib/blacklists.tar.gz
+#wget http://192.168.0.5/blacklists/blacklists.tar.gz
 tar -xvf blacklists.tar.gz
 rm -f blacklists.tar.gz
 
@@ -127,23 +127,24 @@ cd ..
 
 add_bl blacklists "$TMPDIR"
 
-if [ -d "$TMPDIR" ]; then
+echo "Black lists at $TMPDIR"
+#if [ -d "$TMPDIR" ]; then
 	# ignore missing existing dir
-	if [ -d "$BLACKLISTS" ]; then
-		mv "$BLACKLISTS" "$BLACKLISTS.$$" 
-	fi
+	#if [ -d "$BLACKLISTS" ]; then
+	#	mv "$BLACKLISTS" "$BLACKLISTS.$$" 
+	#fi
 
-	mv "$TMPDIR" "$BLACKLISTS" 
-	rm -rf "$TARGET"
+	#mv "$TMPDIR" "$BLACKLISTS" 
+	#rm -rf "$TARGET"
 
-	if [ -d "$BLACKLISTS.$$" ]; then
-		rm -rf "$BLACKLISTS.$$"
-	fi
+	#if [ -d "$BLACKLISTS.$$" ]; then
+	#	rm -rf "$BLACKLISTS.$$"
+	#fi
 
-	ln -s $UFDB_HOME/blacklist_exceptions/alwaysallow/ $BLACKLISTS
-	ln -s $UFDB_HOME/blacklist_exceptions/alwaysblock/ $BLACKLISTS
+	#ln -s $UFDB_HOME/blacklist_exceptions/alwaysallow/ $BLACKLISTS
+#	ln -s $UFDB_HOME/blacklist_exceptions/alwaysblock/ $BLACKLISTS
 
-	chown -R ufdb:ufdb $BLACKLISTS
-fi
+#	chown -R ufdb:ufdb $BLACKLISTS
+#fi
 
 
