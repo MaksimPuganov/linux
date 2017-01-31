@@ -1,0 +1,7 @@
+Run the setup.sh to setup as much of a new ubuntu mate 16.04 installation as possible.  There are a few manual steps that need to be carried out afterwards
+for a fully functional installation.
+
+1) Register the ~/.ssh/id_rsa with gitlab
+2) Configure nsync to access google drive
+
+

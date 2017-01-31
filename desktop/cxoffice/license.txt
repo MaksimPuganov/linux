@@ -1,0 +1,13 @@
+﻿[license]
+id=Duzp2mvkwExKbbdY
+
+[crossmac]
+customer=Jason Pell
+email=jason@pellcorp.com
+expires=2017/10/25
+
+[crosslin]
+customer=Jason Pell
+email=jason@pellcorp.com
+expires=2017/10/25
+
