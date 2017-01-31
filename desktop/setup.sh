@@ -194,7 +194,7 @@ function setupGithubDev() {
 		mkdir ~/bin
 		wget https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh -O ~/bin/git-prompt.sh
 		echo "source ~/bin/git-prompt.sh" >> ~/.bashrc
-		echo 'export PS1="\n\[\e[1;37m\]\[\e[1;32m\]\u\[\e[0;39m\]@\[\e[1;36m\]\h\[\e[0;39m\]:\[\e[1;33m\]\w\[\e[0;39m\]\[\e[1;35m\]$(__git_ps1 " (%s)")\[\e[0;39m\] \[\e[1;37m\]\[\e[0;39m\]$"' >> ~/.bashrc
+		echo 'export PS1="\[\e]0;\u@\h: \w\a\]\[\033[01;34m\] \w\[\033[01;32m\]\$(__git_ps1) \[\033[01;34m\]\$\[\033[00m\] "' >> ~/.bashrc
 	fi
 
 	mkdir -p Development/Github
