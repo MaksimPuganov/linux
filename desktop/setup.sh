@@ -207,9 +207,11 @@ function setupGithubDev() {
 sudo sh -c 'echo "%sudo ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/nopasswd'
 ssh-keygen -f ~/.ssh/id_rsa -C jason@pellcorp.com -N ''
 
-mkdir ~/"Google Drive"
-
 customiseMate
 setupBasePackages
 setupGithubDev
+
+mkdir ~/"Google Drive"
+sudo mkdir /opt/data
+sudo su -c 'echo "UUID=68fefbe5-d301-427f-a81f-24bfc700b133 /opt/data     ext4    user,errors=remount-ro 0       1" >> /etc/fstab'
 
