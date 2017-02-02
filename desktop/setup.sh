@@ -92,7 +92,7 @@ function setupBasePackages() {
 
 	sudo apt-get -y dist-upgrade 
 
-	sudo apt-get install -y libnss-mdns:i386 dkms makemkv-bin makemkv-oss handbrake-gtk nmap google-chrome-stable gdebi kodi kodi-pvr-hts insync insync-caja git ubuntu-make
+	sudo apt-get install -y libnss-mdns:i386 dkms makemkv-bin makemkv-oss handbrake-gtk nmap google-chrome-stable gdebi kodi kodi-pvr-hts insync insync-caja git ubuntu-make nodejs nodejs-legacy npm
 
 	sudo apt-get install -y virtualbox-5.1 oracle-java8-installer libdvd-pkg ubuntu-restricted-extras
 	sudo dpkg-reconfigure libdvd-pkg
@@ -218,4 +218,8 @@ fi
 if [ $(cat /etc/fstab | grep "/opt/data" | wc -l) -eq 0 ]; then
 	sudo su -c 'echo "UUID=68fefbe5-d301-427f-a81f-24bfc700b133 /opt/data     ext4    user,errors=remount-ro 0       1" >> /etc/fstab'
 fi
+
+mount /opt/data
+rm -rf ~/Videos
+ln -s /opt/data/Videos
 
