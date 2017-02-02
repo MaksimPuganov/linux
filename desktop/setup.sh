@@ -220,6 +220,10 @@ if [ $(cat /etc/fstab | grep "/opt/data" | wc -l) -eq 0 ]; then
 fi
 
 mount /opt/data
+
 rm -rf ~/Videos
 ln -s /opt/data/Videos
+
+rm -rf ~/Music
+ln -s /opt/data/Google\ Drive/Music/
 
