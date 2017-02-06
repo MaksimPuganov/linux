@@ -1,0 +1,6 @@
+[Desktop Entry]
+Type=Application
+Terminal=false
+Name=Kill Kodi
+Icon=/home/thomaspell/.local/share/applications/kill-kodi.png
+Exec=/home/thomaspell/.local/share/applications/kill-kodi.sh

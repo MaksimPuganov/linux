@@ -81,6 +81,9 @@ function setupBasePackages() {
 	wget -q https://www.virtualbox.org/download/oracle_vbox.asc -O- | sudo apt-key add -
 	sudo sh -c 'echo "deb http://download.virtualbox.org/virtualbox/debian xenial contrib" >> /etc/apt/sources.list.d/virtual-box.list'
 
+	wget -q https://dl.sinew.in/keys/enpass-linux.key -O- | sudo apt-key add -
+	sudo sh -c 'echo "deb http://repo.sinew.in/ stable main" > /etc/apt/sources.list.d/enpass.list'
+
 	sudo apt-add-repository -y ppa:ubuntu-mate-dev/xenial-mate
 	sudo add-apt-repository -y ppa:ubuntu-desktop/ubuntu-make	
 	sudo add-apt-repository -y ppa:heyarje/makemkv-beta
@@ -92,7 +95,7 @@ function setupBasePackages() {
 
 	sudo apt-get -y dist-upgrade 
 
-	sudo apt-get install -y libnss-mdns:i386 dkms makemkv-bin makemkv-oss handbrake-gtk nmap google-chrome-stable gdebi kodi kodi-pvr-hts insync insync-caja git ubuntu-make nodejs nodejs-legacy npm
+	sudo apt-get install -y enpass libnss-mdns:i386 dkms makemkv-bin makemkv-oss handbrake-gtk nmap google-chrome-stable gdebi kodi kodi-pvr-hts insync insync-caja git ubuntu-make nodejs nodejs-legacy npm
 
 	sudo apt-get install -y virtualbox-5.1 oracle-java8-installer libdvd-pkg ubuntu-restricted-extras
 	sudo dpkg-reconfigure libdvd-pkg

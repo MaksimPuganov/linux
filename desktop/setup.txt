@@ -1,0 +1,48 @@
+1) Setup basic system (ensure restricted extras was checked)
+	sudo apt-get update
+2) Install Handbrake
+	sudo apt-add-repository -y ppa:stebbins/handbrake-releases
+	sudo apt-get -y update
+	sudo apt-get -y install handbrake-gtk
+3) Install Makemkv
+	sudo add-apt-repository -y ppa:heyarje/makemkv-beta
+	sudo apt-get -y update
+	sudo apt-get -y install makemkv-bin makemkv-oss
+
+4) Install Updates
+	sudo apt-get -y dist-upgrade
+4) Install DVD CSS Support
+	sudo apt-get install libdvd-pkg
+10) Setup vpnc
+	sudo apt-get -y install vpnc python-gnomekeyring expect yad
+	sudo tar -zxvf /media/jason/Jason\ Pell/vpnc.tar.gz -C /
+	tar -zxvf /media/jason/Jason\ Pell/personal-bin.tar.gz
+	echo 'export PATH=$PATH:$HOME/personal-bin' >> ~/.bashrc 
+	wget https://raw.githubusercontent.com/kparal/gkeyring/master/gkeyring.py
+	sudo cp gkeyring.py /usr/local/bin/gkeyring
+	sudo chmod ugo+rx /usr/local/bin/gkeyring
+	gkeyring --set --name 'Veda'
+10) Setup git 
+	sudo apt-get -y install libgnome-keyring-dev 
+	cd /usr/share/doc/git/contrib/credential/gnome-keyring
+	sudo make
+	cp /media/jason/Jason\ Pell/home/.gitconfig .
+
+12) Restore android stuff
+	tar -zxvf /media/jason/Jason\ Pell/android-sdk-linux.tar.gz -C /opt
+
+14) Setup Github
+mkdir -p Development/Github
+cd Development/Github
+git clone git@github.com:pellcorp/maven2.git
+git --global config credential.helper cache
+git config credential.helper 'cache --timeout=1800'
+
+15) Install radio tray
+	sudo apt-get -y install radiotray
+
+Add <bookmark name="Mix 101.1" url="http://player.arn.com.au/alternate/mix1011.pls"/>
+/home/jason/.local/share/radiotray/bookmarks.xml
+cp /usr/share/applications/radiotray.desktop ~/.config/autostart/
+echo "X-MATE-Autostart-enabled=true" >> ~/.config/autostart/radiotray.desktop
+
