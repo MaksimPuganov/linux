@@ -97,7 +97,12 @@ function setupBasePackages() {
 
 	sudo apt-get install -y enpass libnss-mdns:i386 dkms makemkv-bin makemkv-oss handbrake-gtk nmap google-chrome-stable gdebi kodi kodi-pvr-hts insync insync-caja git ubuntu-make nodejs nodejs-legacy npm
 
-	sudo apt-get install -y virtualbox-5.1 oracle-java8-installer libdvd-pkg ubuntu-restricted-extras
+	sudo apt-get install -y virtualbox-5.1 oracle-java8-installer oracle-java7-installer libdvd-pkg ubuntu-restricted-extras
+
+	# oracle 8 likes to force itself on us, rather than using update-alternatives
+	sudo rm /etc/profile.d/jdk.sh
+	sudo rm /etc/profile.d/jdk.csh
+
 	sudo dpkg-reconfigure libdvd-pkg
 
 	addToFavourites google-chrome
@@ -210,7 +215,7 @@ function setupGithubDev() {
 	wget http://apache.mirror.digitalpacific.com.au/maven/maven-3/3.3.9/binaries/apache-maven-3.3.9-bin.tar.gz
 	tar -zxvf apache-maven-3.3.9-bin.tar.gz -C /opt
 	rm apache-maven-3.3.9-bin.tar.gz
-	echo "export MAVEN_HOME=/opt/apache-maven-3.3.9/" >> ~/.bashrc
+	echo "export MAVEN_HOME=/opt/apache-maven-3.3.9" >> ~/.bashrc
 	echo 'export PATH=$PATH:$MAVEN_HOME/bin' >> ~/.bashrc
 }
 
