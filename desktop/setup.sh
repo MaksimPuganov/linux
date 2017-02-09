@@ -207,6 +207,7 @@ function setupGithubDev() {
 	git config --global user.email jason@pellcorp.com
 	git config --global alias.st status 
 	git config --global alias.ci commit 
+	git config --global core.editor vim
 
 	if [ $(cat ~/.bashrc | grep "git-prompt.sh" | wc -l) -eq 0 ]; then
 		mkdir ~/bin
