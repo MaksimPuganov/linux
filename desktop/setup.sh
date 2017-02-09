@@ -129,10 +129,12 @@ function setupBasePackages() {
 	# https://github.com/ubuntu/ubuntu-make/issues/79
 	sudo chgrp jason /opt
 	sudo chmod g+w /opt
+
 	umake --accept-license android android-studio /opt/android-studio
 	addToFavourites android-studio
 
 	umake ide eclipse /opt/eclipse
+	addToFavourites eclipse-java
 }
 
 function customiseMate() {
