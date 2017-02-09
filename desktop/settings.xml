@@ -1,0 +1,15 @@
+<settings>
+	<activeProfiles>
+		<activeProfile>development</activeProfile>
+	</activeProfiles>
+
+	<profiles>
+		<profile>
+			<id>development</id>
+
+			<properties>
+				<maven.repo.dir>file:///home/jason/Development/Github/maven2</maven.repo.dir>
+			</properties>
+		</profile>
+	</profiles>
+</settings>

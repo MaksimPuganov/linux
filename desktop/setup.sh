@@ -225,6 +225,10 @@ function setupGithubDev() {
 	rm apache-maven-3.3.9-bin.tar.gz
 	echo "export MAVEN_HOME=/opt/apache-maven-3.3.9" >> ~/.bashrc
 	echo 'export PATH=$PATH:$MAVEN_HOME/bin' >> ~/.bashrc
+
+	mkdir ~/.m2
+	cp $DIR/settings.xml ~/.m2
+
 }
 
 sudo sh -c 'echo "%sudo ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/nopasswd'
