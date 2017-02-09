@@ -135,6 +135,9 @@ function setupBasePackages() {
 
 	umake ide eclipse /opt/eclipse
 	addToFavourites eclipse-java
+
+	# ensure eclipse is using java 8 by linking it directly
+	ln -s /usr/lib/jvm/java-8-oracle/jre /opt/eclipse/jre
 }
 
 function customiseMate() {
