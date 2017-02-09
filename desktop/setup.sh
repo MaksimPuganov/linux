@@ -123,6 +123,8 @@ function setupBasePackages() {
 	sudo chmod g+w /opt
 	umake --accept-license android android-studio /opt/android-studio
 	addToFavourites android-studio
+
+	umake ide eclipse /opt/eclipse
 }
 
 function customiseMate() {
@@ -205,6 +207,11 @@ function setupGithubDev() {
 	git clone git@github.com:pellcorp/maven2.git
 	git clone git@github.com:pellcorp/linux.git
 
+	wget http://apache.mirror.digitalpacific.com.au/maven/maven-3/3.3.9/binaries/apache-maven-3.3.9-bin.tar.gz
+	tar -zxvf apache-maven-3.3.9-bin.tar.gz -C /opt
+	rm apache-maven-3.3.9-bin.tar.gz
+	echo "export MAVEN_HOME=/opt/apache-maven-3.3.9/" >> ~/.bashrc
+	echo 'export PATH=$PATH:$MAVEN_HOME/bin' >> ~/.bashrc
 }
 
 sudo sh -c 'echo "%sudo ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/nopasswd'
@@ -230,8 +237,4 @@ ln -s /opt/data/Videos
 rm -rf ~/Music
 ln -s /opt/data/Google\ Drive/Music/
 
-wget http://apache.mirror.digitalpacific.com.au/maven/maven-3/3.3.9/binaries/apache-maven-3.3.9-bin.tar.gz
-tar -zxvf apache-maven-3.3.9-bin.tar.gz -C /opt
-echo "export MAVEN_HOME=/opt/apache-maven-3.3.9/" >> ~/.bashrc
-echo 'export PATH=$PATH:$MAVEN_HOME/bin' >> ~/.bashrc
 
