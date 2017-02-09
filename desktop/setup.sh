@@ -230,3 +230,8 @@ ln -s /opt/data/Videos
 rm -rf ~/Music
 ln -s /opt/data/Google\ Drive/Music/
 
+wget http://apache.mirror.digitalpacific.com.au/maven/maven-3/3.3.9/binaries/apache-maven-3.3.9-bin.tar.gz
+tar -zxvf apache-maven-3.3.9-bin.tar.gz -C /opt
+echo "export MAVEN_HOME=/opt/apache-maven-3.3.9/" >> ~/.bashrc
+echo 'export PATH=$PATH:$MAVEN_HOME/bin' >> ~/.bashrc
+
