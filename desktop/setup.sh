@@ -103,6 +103,9 @@ function setupBasePackages() {
 	sudo rm /etc/profile.d/jdk.sh
 	sudo rm /etc/profile.d/jdk.csh
 
+	# soapui needs java 7, so set it by default
+	echo 'export JAVA_HOME=/usr/lib/jvm/java-7-oracle' >> ~/.bashrc
+
 	sudo dpkg-reconfigure libdvd-pkg
 
 	addToFavourites google-chrome
