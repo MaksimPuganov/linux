@@ -1,0 +1,22 @@
+Setup TVHeadend on a raspberry pi
+---------------------------------
+
+1) Start with Rasbian
+2) Git clone tvheadend repo 
+FIXME - add detailed instructions
+3) Install hdparm and configure hdd for quieter operation
+sudo hdparm -M 128 /dev/sda
+
+4) Configure HD to never go to sleep
+sudo hdparm -S 0 /dev/sda
+
+https://linuxconfig.org/how-to-reduce-hard-drive-s-acoustic-noise-level
+
+And also configure a cron job
+export EDITOR=vi
+crontab -e
+
+*/5 * * * * sudo touch /mnt/usbhdd/.wakeup
+
+https://oliverbusse.notesx.net/hp.nsf/blogpost.xsp?documentId=E16
+
