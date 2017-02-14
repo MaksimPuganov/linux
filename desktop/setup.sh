@@ -54,6 +54,14 @@ function addToFavourites() {
 	fi
 }
 
+function disablePasswordAuthentication() {
+    # http://yesanotherubuntublog.blogspot.com.au/2011/07/how-to-disable-authentication-for.html
+    # allow all packaging related stuff without prompting for a password
+    for policyfile in $(find /usr/share/polkit-1/actions/ -type f); do
+        sudo xmlstarlet ed -L -u '//action[*]/defaults/allow_active[text()="auth_admin" or text()= "auth_admin_keep"]' -v "yes" $policyfile
+    done
+}
+
 function disableStartupApp() {
 	if [ -f /etc/xdg/autostart/$1.desktop ]; then
 		if [ ! -d ~/.config/autostart ]; then
@@ -95,7 +103,7 @@ function setupBasePackages() {
 
 	sudo apt-get -y dist-upgrade 
 
-	sudo apt-get install -y enpass vim libnss-mdns:i386 dkms makemkv-bin makemkv-oss handbrake-gtk nmap google-chrome-stable gdebi kodi kodi-pvr-hts insync insync-caja git ubuntu-make nodejs nodejs-legacy npm
+	sudo apt-get install -y xmlstarlet jq enpass vim libnss-mdns:i386 dkms makemkv-bin makemkv-oss handbrake-gtk nmap google-chrome-stable gdebi kodi kodi-pvr-hts insync insync-caja git ubuntu-make nodejs nodejs-legacy npm
 
 	sudo apt-get install -y virtualbox-5.1 oracle-java8-installer oracle-java7-installer libdvd-pkg ubuntu-restricted-extras
 
@@ -235,9 +243,10 @@ function setupGithubDev() {
 sudo sh -c 'echo "%sudo ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/nopasswd'
 ssh-keygen -f ~/.ssh/id_rsa -C jason@pellcorp.com -N ''
 
-customiseMate
 setupBasePackages
 setupGithubDev
+customiseMate
+disablePasswordAuthentication
 
 if [ ! -d /opt/data ]; then
 	sudo mkdir /opt/data
