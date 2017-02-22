@@ -103,7 +103,7 @@ function setupBasePackages() {
 
 	sudo apt-get -y dist-upgrade 
 
-	sudo apt-get install -y xmlstarlet jq enpass vim libnss-mdns:i386 dkms makemkv-bin makemkv-oss handbrake-gtk nmap google-chrome-stable gdebi kodi kodi-pvr-hts insync insync-caja git ubuntu-make nodejs nodejs-legacy npm
+	sudo apt-get install -y libgnome-keyring-dev radiotray xmlstarlet jq enpass vim libnss-mdns:i386 dkms makemkv-bin makemkv-oss handbrake-gtk nmap google-chrome-stable gdebi kodi kodi-pvr-hts insync insync-caja git ubuntu-make nodejs nodejs-legacy npm
 
 	sudo apt-get install -y virtualbox-5.1 oracle-java8-installer oracle-java7-installer libdvd-pkg ubuntu-restricted-extras
 
@@ -146,6 +146,13 @@ function setupBasePackages() {
 
 	# ensure eclipse is using java 8 by linking it directly
 	ln -s /usr/lib/jvm/java-8-oracle/jre /opt/eclipse/jre
+}
+
+function setupVmwarePlayer() {
+	# fixme, how to download latest version of VM Ware player
+	wget https://download3.vmware.com/software/player/file/VMware-Player-12.5.2-4638234.x86_64.bundle -O /tmp/VMware-Player-12.5.2.x86_64.bundle
+	chmod 777 /tmp/VMware-Player-12.5.2.x86_64.bundle
+	sudo /tmp/VMware-Player-12.5.2.x86_64.bundle
 }
 
 function customiseMate() {
@@ -198,13 +205,17 @@ function customiseMate() {
 	
 	# https://github.com/mate-desktop/mate-utils/issues/37
 	sudo cp $DIR/mate-screenshot /usr/local/bin
-	chmod 777 /usr/local/bin/mate-screenshot
+	sudo chmod 777 /usr/local/bin/mate-screenshot
 
 	gsettings set org.mate.control-center.keybinding:/org/mate/desktop/keybindings/custom0/ name 'Screenshot Area'
 	gsettings set org.mate.control-center.keybinding:/org/mate/desktop/keybindings/custom0/ action 'bash -c "DISPLAY=:0 mate-screenshot -a"'
 	gsettings set org.mate.control-center.keybinding:/org/mate/desktop/keybindings/custom0/ binding '<Shift>Print'
 
 	mate-panel --replace &
+}
+
+function setupVpn() {
+	sudo apt-get -y install vpnc python-gnomekeyring expect
 }
 
 function setupGithubDev() {
@@ -247,6 +258,9 @@ setupBasePackages
 setupGithubDev
 customiseMate
 disablePasswordAuthentication
+setupVpn
+
+setupVmwarePlayer
 
 if [ ! -d /opt/data ]; then
 	sudo mkdir /opt/data
