@@ -74,11 +74,11 @@ echo "CREATE USER 'aqidb'@'localhost' IDENTIFIED BY 'password'" | mysql -s -u ro
 echo "GRANT ALL PRIVILEGES ON aqidb.* TO 'aqidb'@'localhost';" | mysql -s -u root --password=password mysql
 echo "FLUSH PRIVILEGES;" | mysql -s -u root --password=password mysql
 
-echo "Setting Admin user 'Webadmin-clair' password to 'password'"
-echo "update wp_users set user_pass = MD5('password') where user_login = 'Webadmin-clair'" | mysql -s -u root --password=password aqidb
-
 mysql -s -u root --password=password aqidb < /home/wordpress/db.sql
 rm -rf /tmp/db-$$
+
+echo "Setting Admin user 'Webadmin-clair' password to 'password'"
+echo "update wp_users set user_pass = MD5('password') where user_login = 'Webadmin-clair'" | mysql -s -u root --password=password aqidb
 
 ETH_DEVICE=$(ip link | grep ": e" | tr ':' ' ' | awk '{print $2}')
 IP_ADDRESS=$(ip addr show dev $ETH_DEVICE | sed -nr "s/.*inet ([^/]+).*/\1/p")
