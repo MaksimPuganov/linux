@@ -1,5 +1,6 @@
-Start with Ubuntu Server 16.04
-------------------------------
+Setup Notes
+-----------
+* This does not necessarily represent the entire set of steps, its possible I forgot a few things.
 
 1) Install Ubuntu Server
 
