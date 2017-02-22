@@ -78,7 +78,8 @@ mysql -s -u root --password=password aqidb < /home/wordpress/db.sql
 rm -rf /tmp/db-$$
 
 echo "update wp_users set user_pass = MD5('password'), user_email = 'whocares@whocares.com', user_nicename = 'whocares'" | mysql -s -u root --password=password aqidb
-echo "update wp_users set user_login = 'admin', user_email = 'admin@whocares.com', display_name = 'Admin' where user_login = 'Andrea'" | mysql -s -u root --password=password aqidb
+# note the user of the ID column, so that I am not exposing any production user_logins
+echo "update wp_users set user_login = 'admin', user_email = 'admin@whocares.com', display_name = 'Admin' where id = 1" | mysql -s -u root --password=password aqidb
 echo "update wp_users set user_login = UUID(), display_name = 'whocares' where user_login != 'admin'" | mysql -s -u root --password=password aqidb
 
 ETH_DEVICE=$(ip link | grep ": e" | tr ':' ' ' | awk '{print $2}')
