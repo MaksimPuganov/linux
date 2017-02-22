@@ -1,0 +1,75 @@
+Start with Ubuntu Server 16.04
+------------------------------
+
+1) Install Ubuntu Server
+
+2) Add a wordpress user 
+sudo useradd -m wordpress
+echo "wordpress:password" | chpasswd
+
+3) Configure auto console login
+
+sudo mkdir -p /etc/systemd/system/getty@tty1.service.d
+sudo vi /etc/systemd/system/getty@tty1.service.d/override.conf
+
+With the following contents:
+
+[Service]
+ExecStart=
+ExecStart=-/sbin/agetty -a wordpress --noclear %I $TERM
+Type=idle
+
+4) Print out VM IP Address and update wordpress db with this ip
+
+Add /home/wordpress/startup.sh to .bashrc so that the wordpress wp_options for home and siteurl are updated with the current IP of the VM
+
+5) Install software
+
+sudo apt-get install phpmyadmin apache2-utils apache2 mysql-server php libapache2-mod-php php-mcrypt php-mysql zip unzip php-curl php-gd php-mbstring php-mcrypt php-xml php-xmlrpc samba samba-common python-glade2 system-config-samba
+
+6) To ensure that the index.php is loaded before index.html
+
+Modify cat /etc/apache2/mods-enabled/dir.conf to include index.php at the beginning before index.html
+
+7) To get .htaccess file working, need to modify /etc/apache2/apache2.conf
+
+Change the Directory / and Directory /var/www/ AllowOverride None to AllowOverride All
+
+8) Configure mysql to allow the '0000-00-00 00:00:00' in datetime definitions in the sql file
+
+sudo vi /etc/mysql/mysql.conf.d/mysqld.cnf
+
+Add 
+sql_mode = ''
+
+Under skip-external-locking
+
+ sudo systemctl restart mysql.service
+
+9) Fix up issue with mysql taking ages to shut down
+
+http://askubuntu.com/a/624673
+
+10) Configure samba
+
+Add to /etc/samba/smb.conf
+
+[global]
+workgroup = WORKGROUP
+server string = Samba Server %v
+netbios name = ubuntu
+security = user
+map to guest = bad user
+dns proxy = no
+
+[website]
+path = /var/www/html
+browsable =yes
+writable = yes
+guest ok = yes
+read only = no
+force user = www-data
+
+Reboot for it to take effect properly
+
+
