@@ -10,3 +10,8 @@ echo ""
 
 SCRIPT="update wp_options set option_value = 'http://$IP_ADDRESS' where option_name in ('siteurl', 'home')"
 echo $SCRIPT | mysql -u root --password=password  aqinetau_wp1 2>/dev/null
+
+# ensure that wordpress uses the updated config, need to restart apache2
+# TODO - only do this if the IP has changed.
+sudo systemctl restart apache2
+
