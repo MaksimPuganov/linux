@@ -13,10 +13,9 @@ ufw default deny incoming
 ufw allow out on tun0 from any to any
 ufw allow in on tun0 from any to any
 
-ufw allow in to 192.168.0.0/24
-ufw allow out to 192.168.0.0/24
-
-ufw allow out 1194/udp
+ufw allow out to 192.168.0.3
+ufw allow out to 192.168.0.9
+ufw allow out to 192.168.0.69
 
 ufw enable
 
