@@ -2,8 +2,8 @@
 
 /etc/openvpn/update-resolv-conf $@
 
-ufw reset
 ufw disable
+ufw --force reset
 
 # deny everything
 ufw default deny outgoing

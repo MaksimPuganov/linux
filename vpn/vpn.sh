@@ -19,7 +19,7 @@ if [ $# -gt 0 ]; then
 	sudo sed -i "s!%VPN_TMP_DIR%!$VPN_TMP_DIR!g" $VPN_CONF
 	sudo sed -i "s!%DIR%!$DIR!g" $VPN_CONF
 	sudo sed -i "s!%AUTH_USER%!$AUTH_USER!g" $VPN_CONF
-	cat $VPN_CONF
+
 	sudo openvpn --config $VPN_CONF
 	rm $VPN_CONF
 	rm $AUTH_USER
