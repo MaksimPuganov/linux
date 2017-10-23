@@ -52,11 +52,8 @@ while True:
                 response("ERR message=Invalid%20Channel")
         elif line.startswith("https://www.youtube.com"):
             response("OK")
-        elif line.startswith('https://') or line.startswith('https://'):           
-            response("OK")
-        else:
-            logger.info("Most likely a connect request, so let it through")
-            response("OK")
+	else:
+	    response("ERR")
     except:
         pass
 
