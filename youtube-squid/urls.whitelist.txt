@@ -1,2 +1,13 @@
 .*s3\.amazonaws\.com/kzs3files.*
 .*s3\.amazonaws\.com/downloads\.mailchimp\.com.*
+https://www\.youtube\.com/yts.*
+https://www\.youtube\.com/sw.js
+https://www\.youtube\.com/api.*
+https://www\.youtube\.com/get_video_info.*
+https://www\.youtube\.com/youtubei/.*
+https://www\.youtube\.com/get_endscreen.*
+https://www\.youtube\.com/ads/.*
+https://www\.youtube\.com/heartbeat.*
+https://www\.youtube\.com/player.*
+https://www\.youtube\.com/ptracking.*
+.*google\.com.*.js

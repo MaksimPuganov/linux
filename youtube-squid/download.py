@@ -41,18 +41,16 @@ def download(url):
 while True:
 	try:
 		line = sys.stdin.readline().strip()
+		logger.info(line)
 
 		if line == "":
 			exit()
-		elif line.startswith("https://www.youtube.com/embed"):
+		elif line.startswith("https://youtube.com"):
 			logger.info(line)
-			ucid = download(line)
-			if ucid == 'UCu6mSoMNzHQiBIOCkHUa2Aw':
-				response("OK")
-			else:
-				response("ERR message=Invalid%20Channel")
+			response("ERR message=Invalid%20Channel")
 		else:
 			response("ERR")
-	except:
+	except Exception as e:
+		response(e)
 		pass
 

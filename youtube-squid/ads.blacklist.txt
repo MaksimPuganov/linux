@@ -1,0 +1,5 @@
+.*googleads\.g\.doubleclick\.net.*
+.*googleadservices\.com.*
+.*googlesyndication\.com.*
+.*quantserve\.com.*
+.*google-analytics\.com.*

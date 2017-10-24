@@ -11,6 +11,7 @@
 .safebrowsing.google.com
 .googleapis.com
 .ytimg.com
+.img.youtube.com
 .tumblebooks.com
 .jquery.com
 .gstatic.com
@@ -25,3 +26,5 @@
 .assets.pinterest.com
 .syndication.twitter.com
 .grl.ent.sirsidynix.net.au
+.googlevideo.com
+.yt3.ggpht.com
