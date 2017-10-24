@@ -21,11 +21,9 @@ def response(r):
 
 def download(url):
 	try:
-		#UCu6mSoMNzHQiBIOCkHUa2Aw
 		#httplib2.debuglevel=4
-		h = httplib2.Http(proxy_info = httplib2.ProxyInfo(socks.PROXY_TYPE_HTTP, 'localhost', 3128), disable_ssl_certificate_validation=True)
+		h = httplib2.Http()
 
-		logger.info(url)
 		r, content = h.request(url, "GET")
 
 		match = re.compile('"ucid":"([^"]+)"').findall(content)
@@ -35,22 +33,25 @@ def download(url):
 			logger.error("Could not find ucid")
 			return ""
 	except:
-		logger.error("Failed to download url")
+		logger.error("Failed to download url " + url)
 		return ""
 
 while True:
 	try:
 		line = sys.stdin.readline().strip()
-		logger.info(line)
 
 		if line == "":
 			exit()
-		elif line.startswith("https://youtube.com"):
-			logger.info(line)
-			response("ERR message=Invalid%20Channel")
+		elif line.startswith("https://www.youtube.com/watch?"):
+			dcid = download(line)
+			if dcid == 'UCu6mSoMNzHQiBIOCkHUa2Aw':
+				logger.info("Valid Channel for " + line)
+				response("OK")
+			else:
+				logger.error("Invalid Channel for " + line)
+				response("ERR")
 		else:
 			response("ERR")
 	except Exception as e:
-		response(e)
 		pass
 
