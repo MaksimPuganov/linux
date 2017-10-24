@@ -7,7 +7,7 @@ import sys
 import logging
 from urlparse import urlparse
 
-logger = logging.getLogger('awsconsole')
+logger = logging.getLogger('console')
 logger.setLevel(logging.INFO)
 ch = logging.FileHandler(filename="/tmp/logger.log")
 ch.setLevel(logging.INFO)

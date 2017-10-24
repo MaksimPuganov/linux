@@ -3,3 +3,6 @@
 .*googlesyndication\.com.*
 .*quantserve\.com.*
 .*google-analytics\.com.*
+.*www.googletagmanager\.com.*
+.*addthis\.com.*
+.*adroll\.com.*

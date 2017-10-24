@@ -1,2 +1,6 @@
 https://www\.kidzsearch\.com.*
-
+https://www\.natgeokids\.com.*
+https://scratch\.mit\.edu.*
+https://mathletics\.com.*
+https://au\.mathletics\.com.*
+https://nz\.mathletics\.com.*
