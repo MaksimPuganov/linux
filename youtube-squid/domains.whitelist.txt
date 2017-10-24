@@ -1,4 +1,5 @@
 .mathletics.com
+.scratchjr.org
 .dev.visualwebsiteoptimizer.com
 .resultshq.com.au
 .kidzsearch.com

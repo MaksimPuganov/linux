@@ -6,3 +6,5 @@
 .*www.googletagmanager\.com.*
 .*addthis\.com.*
 .*adroll\.com.*
+.*play\.google\.com.*
+.*itunes\.apple\.com.*
