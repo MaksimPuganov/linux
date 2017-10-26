@@ -51,12 +51,17 @@ with open(dir_path + '/youtube.whitelist.txt') as f:
 while True:
 	try:
 		line = sys.stdin.readline().strip()
-
+		
 		if line == "":
 			exit()
-		elif line in users:
-			logger.info("Valid user: " + line)
-			response("OK")
+		elif line.startswith("https://www.youtube.com/user/"):
+			stripped_line = line[:line.find('?')] if '?' in line else line
+			if stripped_line in users:
+				logger.info("Valid user: " + line)
+				response("OK")
+			else:
+				logger.info("Invalid user: " + line)
+				response("ERR")
 		elif line.startswith("https://www.youtube.com/watch?"):
 			dcid = download(line)
 			if dcid != "":
