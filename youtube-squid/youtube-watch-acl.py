@@ -21,7 +21,25 @@ def response(r):
 	sys.stdout.write("%s\n" % r)
 	sys.stdout.flush()
 
-def download(url):
+def findbrowseidforuser(url):
+	try:
+		#httplib2.debuglevel=4
+		h = httplib2.Http(disable_ssl_certificate_validation=False)
+
+		r, content = h.request(url, "GET")
+#vnd.youtube://user/UCXuqSBlHAE6Xw-yeJA0Tunw
+		match = re.compile('"vnd.youtube://user/([^"]+)"').findall(content)
+		if match:
+			return match[0]
+		else:
+			logger.error("Could not find browseId for url " + url)
+			return ""
+	except Exception as e:
+		print e
+		logger.error("Failed to download url " + url)
+		return ""
+
+def findchannelidforwatch(url):
 	try:
 		#httplib2.debuglevel=4
 		h = httplib2.Http(disable_ssl_certificate_validation=False)
@@ -44,9 +62,15 @@ channels = list()
 with open(dir_path + '/youtube.whitelist.txt') as f:
     for line in f:
         if line.startswith("https://"):
-            users.append(line.strip())
-        else:
-            channels.append(line.strip())
+			user = line.strip()
+			channel = findbrowseidforuser(user)
+			if channel != "":
+				logger.info("Adding user " + user + " with channel " + channel)
+				users.append(user)
+				channels.append(channel)
+
+print users
+print channels
 
 while True:
 	try:
@@ -63,7 +87,7 @@ while True:
 				logger.info("Invalid user: " + line)
 				response("ERR")
 		elif line.startswith("https://www.youtube.com/watch?"):
-			dcid = download(line)
+			dcid = findchannelidforwatch(line)
 			if dcid != "":
 				if dcid in channels:
 					logger.info("Valid Channel for " + line)
