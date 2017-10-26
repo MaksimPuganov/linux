@@ -15,4 +15,3 @@ https://s2\.googleusercontent\.com/s2/favicons.*
 https://www\.youtube\.com/ptracking.*
 https://www\.youtube\.com/.*ajax.*
 https://www\.youtube\.com/annotations_invideo.*
-https://www.youtube.com/user/theCodyReeder
