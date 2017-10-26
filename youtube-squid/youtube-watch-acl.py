@@ -69,9 +69,6 @@ with open(dir_path + '/youtube.whitelist.txt') as f:
 				users.append(user)
 				channels.append(channel)
 
-print users
-print channels
-
 while True:
 	try:
 		line = sys.stdin.readline().strip()
