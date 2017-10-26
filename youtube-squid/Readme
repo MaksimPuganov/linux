@@ -1,4 +1,7 @@
 https://icicimov.github.io/blog/devops/Squid-ReverseProxy-SSL-LDAP/
+
+But install libssl-dev as well
+
 https://wiki.squid-cache.org/ConfigExamples/Intercept/SslBumpExplicit
 https://www.linuxquestions.org/questions/linux-newbie-8/squid-blocking-all-traffic-access-682515/
 https://advsoft.info/articles/setting_up_HTTPS_inspection_in_squid.php

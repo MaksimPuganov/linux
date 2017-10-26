@@ -103,7 +103,7 @@ function setupBasePackages() {
 
 	sudo apt-get -y dist-upgrade 
 
-	sudo apt-get install -y libgnome-keyring-dev radiotray gimp xmlstarlet jq enpass vim libnss-mdns:i386 dkms makemkv-bin makemkv-oss handbrake-gtk nmap google-chrome-stable gdebi kodi kodi-pvr-hts insync insync-caja git ubuntu-make nodejs nodejs-legacy npm openvpn
+	sudo apt-get install -y libgnome-keyring-dev radiotray gimp xmlstarlet jq enpass vim libnss-mdns:i386 dkms makemkv-bin makemkv-oss handbrake-gtk nmap google-chrome-stable gdebi kodi kodi-pvr-hts insync insync-caja git ubuntu-make nodejs nodejs-legacy npm openvpn python-pip
 
 	sudo apt-get install -y virtualbox-5.1 oracle-java8-installer oracle-java7-installer libdvd-pkg ubuntu-restricted-extras
 

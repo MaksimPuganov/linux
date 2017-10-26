@@ -1,15 +1,17 @@
 #!/usr/bin/env python
 
 import httplib2
-import socks
 import re
 import sys
 import logging
 from urlparse import urlparse
+import os 
+
+dir_path = os.path.dirname(os.path.realpath(__file__))
 
 logger = logging.getLogger('console')
 logger.setLevel(logging.INFO)
-ch = logging.FileHandler(filename="/tmp/logger.log")
+ch = logging.FileHandler(filename="/var/log/squid/youtube.log")
 ch.setLevel(logging.INFO)
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 ch.setFormatter(formatter)
@@ -22,7 +24,7 @@ def response(r):
 def download(url):
 	try:
 		#httplib2.debuglevel=4
-		h = httplib2.Http()
+		h = httplib2.Http(disable_ssl_certificate_validation=False)
 
 		r, content = h.request(url, "GET")
 
@@ -30,11 +32,21 @@ def download(url):
 		if match:
 			return match[0]
 		else:
-			logger.error("Could not find ucid")
+			logger.error("Could not find ucid for url " + url)
 			return ""
-	except:
+	except Exception as e:
+		print e
 		logger.error("Failed to download url " + url)
 		return ""
+
+users = list()
+channels = list()
+with open(dir_path + '/youtube.whitelist.txt') as f:
+    for line in f:
+        if line.startswith("https://"):
+            users.append(line.strip())
+        else:
+            channels.append(line.strip())
 
 while True:
 	try:
@@ -42,13 +54,19 @@ while True:
 
 		if line == "":
 			exit()
+		elif line in users:
+			logger.info("Valid user: " + line)
+			response("OK")
 		elif line.startswith("https://www.youtube.com/watch?"):
 			dcid = download(line)
-			if dcid == 'UCu6mSoMNzHQiBIOCkHUa2Aw':
-				logger.info("Valid Channel for " + line)
-				response("OK")
+			if dcid != "":
+				if dcid in channels:
+					logger.info("Valid Channel for " + line)
+					response("OK")
+				else:
+					logger.error("Invalid Channel for " + line)
+					response("ERR")
 			else:
-				logger.error("Invalid Channel for " + line)
 				response("ERR")
 		else:
 			response("ERR")

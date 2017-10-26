@@ -1,12 +1,11 @@
 Run the setup.sh to setup as much of a new ubuntu mate 16.04 installation as possible.  There are a few manual steps that need to be carried out afterwards
 for a fully functional installation.
 
-1) Register the ~/.ssh/id_rsa with gitlab
+1) Register the ~/.ssh/id_rsa with github
 2) Configure nsync to access google drive
 
-3) Setup git 
-	cd /usr/share/doc/git/contrib/credential/gnome-keyring
-	sudo make
+3) Setup git for cxf dev access
+	http://stackoverflow.com/questions/13385690/how-to-use-git-with-gnome-keyring-integration
 
 4) Add <bookmark name="Mix 101.1" url="http://player.arn.com.au/alternate/mix1011.pls"/>
 /home/jason/.local/share/radiotray/bookmarks.xml
