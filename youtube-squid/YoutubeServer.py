@@ -50,11 +50,23 @@ def finduser(url):
 		r, content = h.request(url, "GET")
 #vnd.youtube://user/UCXuqSBlHAE6Xw-yeJA0Tunw
 #<meta name="twitter:image" content="https://yt3.ggpht.com/-QGhAvSy7npM/AAAAAAAAAAI/AAAAAAAAAAA/Uom6Bs6gR9Y/s900-c-k-no-mo-rj-c0xffffff/photo.jpg">
-		match = re.compile('<meta name="twitter:image" content="([^"]+)"').findall(content)
+		match = re.compile('<meta name="og:image" content="([^"]+)"').findall(content)
 		if match:
 			uservars.update({'photo':match[0]})
 		else:
 			logger.error("Could not find photo for user " + url)
+
+		match = re.compile('<meta name="og:title" content="([^"]+)"').findall(content)
+		if match:
+			uservars.update({'title':match[0]})
+		else:
+			logger.error("Could not find title for user " + url)
+
+		match = re.compile('<meta name="og:description" content="([^"]+)"').findall(content)
+		if match:
+			uservars.update({'description':match[0]})
+		else:
+			logger.error("Could not find description for user " + url)
 
 		match = re.compile('"vnd.youtube://user/([^"]+)"').findall(content)
 		if match:
@@ -156,8 +168,14 @@ class HttpRequestHandler(BaseHTTPRequestHandler):
 				self.wfile.write("<a href=\"" + i + "\">")
 				if 'photo' in user:
 					self.wfile.write('<img src="' + user.get('photo') + '" width="50">')
-				self.wfile.write(i)
-				self.wfile.write("</a></li>")
+				if 'title' in user:
+					self.wfile.write(user.get('title'))
+				else:
+					self.wfile.write(i)
+				self.wfile.write("</a>")
+				if 'description' in user:
+					self.wfile('<p>' + user.get('description') + '</p>')
+				self.wfile.write("</li>")
 				
 			self.wfile.write("</ul></body></html>")
 
