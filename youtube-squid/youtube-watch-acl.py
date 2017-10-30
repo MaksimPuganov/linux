@@ -7,6 +7,8 @@ import logging
 from urlparse import urlparse
 import os 
 
+youtubeServerUrl = "http://localhost:9999"
+
 logger = logging.getLogger('console')
 logger.setLevel(logging.INFO)
 ch = logging.FileHandler(filename="/var/log/squid/youtube.log")
@@ -38,17 +40,16 @@ while True:
 		if line == "":
 			exit()
 		elif line.startswith("https://www.youtube.com/user/"):
-			user = line[line.find('/user/'):]
-			user = user[6:]
-			reply = queryYoutubeServer("http://localhost:9999/user/" + user)
+			user = line[line.find('/user/')+6:]
+			reply = queryYoutubeServer(youtubeServerUrl + "/user/" + user)
 			response(reply)
-		elif line.startswith("https://www.youtube.com/watch?"):
-			watch = line[line.find('?v='):]
-			watch = user[3:]
-			reply = queryYoutubeServer("http://localhost:9999/watch/" + watch)
+		elif line.startswith("https://www.youtube.com/watch?v="):
+			watch = line[line.find('/watch?v=')+9:]
+			reply = queryYoutubeServer(youtubeServerUrl + "/watch/" + watch)
 			response(reply)
 		else:
 			response("ERR")
 	except Exception as e:
+		logger.error("Error: " + str(e))
 		pass
 

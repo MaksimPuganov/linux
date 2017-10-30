@@ -1,0 +1,13 @@
+[Unit]
+Description=Youtube Service for Squid ACL
+Wants=network-online.target squid.service
+After=network.target network-online.target
+Before=squid.service
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/YoutubeServer.py 9999
+
+[Install]
+WantedBy=multi-user.target
+

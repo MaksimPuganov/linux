@@ -117,7 +117,7 @@ with open(dir_path + '/youtube.whitelist.txt') as f:
 				channel = userdetails.get('channel')
 
 				channellist.append(userdetails.get('channel'))
-				users.update({user:userdetails})
+				users.update({username:userdetails})
 
 class ThreadingSimpleServer(ThreadingMixIn, HTTPServer):
 	allow_reuse_address = True
@@ -183,10 +183,10 @@ class HttpRequestHandler(BaseHTTPRequestHandler):
 					else:
 						self.wfile.write("ERR")
 				else:
-					self.wfile.write("BH")
+					self.wfile.write("ERR")
 		except Exception as e:
 			logger.error("Error " + str(e))
-			self.wfile.write("BH")
+			self.wfile.write("ERR")
 			
 	def do_GET(self):
 		path = urlparse.urlparse(self.path)
@@ -205,21 +205,25 @@ class HttpRequestHandler(BaseHTTPRequestHandler):
 
 			self.wfile.write("<html><html style=\"background-color: #fafafa;\">")
 			self.wfile.write("</head><body>")
-			self.wfile.write("<img src=\"youtube.png\"><ul>")
+			self.wfile.write("<p><img style=\"vertical-align:middle\" src=\"youtube.png\"> <span style=\"font-size: x-large; font-weight: bold\">Youtube Channels</span></p>")
+
+			self.wfile.write("<ul>")
 			for i in userlist:
 				self.wfile.write("<li>");
 				user = users.get(i)
-				
+
 				self.wfile.write("<a href=\"" + i + "\">")
 				if 'photo' in user:
 					self.wfile.write('<img src="' + user.get('photo') + '" width="50">')
+
 				if 'title' in user:
 					self.wfile.write(user.get('title'))
 				else:
 					self.wfile.write(i)
+
 				self.wfile.write("</a>")
 				if 'description' in user:
-					self.wfile('<p>' + user.get('description') + '</p>')
+					self.wfile.write('<p>' + user.get('description') + '</p>')
 				self.wfile.write("</li>")
 				
 			self.wfile.write("</ul></body></html>")
