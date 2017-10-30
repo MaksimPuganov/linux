@@ -12,19 +12,33 @@ import logging
 import threading
 from sys import argv
 
-class ThreadSafeDict(dict) :
-    def __init__(self, * p_arg, ** n_arg) :
-        dict.__init__(self, * p_arg, ** n_arg)
-        self._lock = threading.Lock()
+class ThreadSafeDict :
+	def __init__(self, max_size) :
+		self._max_size = max_size
+		self._lru = []
+		self._dict = {}
+		self._lock = threading.Lock()
 
-    def __enter__(self) :
-        self._lock.acquire()
-        return self
+	def get(self, key, default=None):
+		with self._lock:
+			return self._dict.get(key, default)
 
-    def __exit__(self, type, value, traceback) :
-        self._lock.release()
+	def add(self, key, value):
+		with self._lock:
+			if len(self._dict) >= self._max_size:
+				oldkey = self._lru.pop(0)
+				del self._dict[oldkey]
 
-WATCH_CACHE = ThreadSafeDict()
+			self._lru.append(key)
+			self._dict[key] = value
+
+	def __contains__(self, key):
+		with self._lock:
+			return key in self._dict
+
+	def __len__(self):
+		with self._lock:
+			return len(self._dict)
 
 PORT = 80
 dir_path = os.path.dirname(os.path.realpath(__file__))
@@ -88,10 +102,10 @@ def finduser(url):
 		match = re.compile('"vnd.youtube://user/([^"]+)"').findall(content)
 		if match:
 			uservars.update({'channel':match[0]})
+			uservars.update({'url':url})
 
-			user = line[url.find('/user/'):]
-			user = user[6:]
-			uservars.update({'user':user.strip()})
+			user = line[url.find('/user/') + 6:].strip()
+			uservars.update({'user':user})
 			return uservars
 		else:
 			logger.error("Could not find channel id for user " + url)
@@ -104,11 +118,13 @@ def finduser(url):
 userlist = list()
 channellist = list()
 users = dict()
+watchCache = ThreadSafeDict(100)
+
 with open(dir_path + '/youtube.whitelist.txt') as f:
 	for line in f:
 		if line.startswith("https://"):
-			user = line.strip()
-			userdetails = finduser(user)
+			userurl = line.strip()
+			userdetails = finduser(userurl)
 			if userdetails != None:
 				username = userdetails.get('user')
 				logger.info("Adding user " + username)
@@ -170,14 +186,15 @@ class HttpRequestHandler(BaseHTTPRequestHandler):
 		self.end_headers()
 
 		try:
-			with WATCH_CACHE as w:
-				if watch not in w:
+			with watchCache as wc:
+				# if not in cache as yet, then download and add to cache
+				if watch not in wc:
 					ucid = findchannelidforwatch(watch)
 					if ucid != "":
-						w[watch] = ucid
+						wc.add(watch, ucid)
 				
-				if watch in w:
-					ucid = w[watch]
+				if watch in wc:
+					ucid = wc.get(watch)
 					if ucid in channellist:
 						self.wfile.write("OK")
 					else:
@@ -204,6 +221,7 @@ class HttpRequestHandler(BaseHTTPRequestHandler):
 			self._set_headers()
 
 			self.wfile.write("<html><html style=\"background-color: #fafafa;\">")
+			self.wfile.write("<title>Youtube Channels</title>")
 			self.wfile.write("</head><body>")
 			self.wfile.write("<p><img style=\"vertical-align:middle\" src=\"youtube.png\"> <span style=\"font-size: x-large; font-weight: bold\">Youtube Channels</span></p>")
 
@@ -212,9 +230,9 @@ class HttpRequestHandler(BaseHTTPRequestHandler):
 				self.wfile.write("<li>");
 				user = users.get(i)
 
-				self.wfile.write("<a href=\"" + i + "\">")
+				self.wfile.write("<a style=\"text-decoration: none\" href=\"" + user.get('url') + "\">")
 				if 'photo' in user:
-					self.wfile.write('<img src="' + user.get('photo') + '" width="50">')
+					self.wfile.write('<img style=\"vertical-align:middle\" src="' + user.get('photo') + '" width="50"> ')
 
 				if 'title' in user:
 					self.wfile.write(user.get('title'))
@@ -228,7 +246,9 @@ class HttpRequestHandler(BaseHTTPRequestHandler):
 				
 			self.wfile.write("</ul></body></html>")
 
-PORT=int(argv[1])
+#if len(argv) > 0:
+#	PORT=int(argv[1])
+
 try:
     logger.info("Starting Console on port " + str(PORT) + "...")
     server = ThreadingSimpleServer(('0.0.0.0', PORT), HttpRequestHandler)
