@@ -26,7 +26,7 @@ class ThreadSafeDict(dict) :
 
 WATCH_CACHE = ThreadSafeDict()
 
-PORT = 8080
+PORT = 80
 dir_path = os.path.dirname(os.path.realpath(__file__))
 
 logger = logging.getLogger('console')

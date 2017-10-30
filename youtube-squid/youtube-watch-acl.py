@@ -7,7 +7,7 @@ import logging
 from urlparse import urlparse
 import os 
 
-youtubeServerUrl = "http://localhost:9999"
+youtubeServerUrl = "http://localhost"
 
 logger = logging.getLogger('console')
 logger.setLevel(logging.INFO)
