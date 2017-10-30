@@ -6,7 +6,7 @@ Before=squid.service
 
 [Service]
 Type=simple
-ExecStart=/usr/local/bin/YoutubeServer.py 9999
+ExecStart=/usr/local/bin/YoutubeServer.py 
 
 [Install]
 WantedBy=multi-user.target
