@@ -7,8 +7,6 @@ import logging
 from urlparse import urlparse
 import os 
 
-dir_path = os.path.dirname(os.path.realpath(__file__))
-
 logger = logging.getLogger('console')
 logger.setLevel(logging.INFO)
 ch = logging.FileHandler(filename="/var/log/squid/youtube.log")
@@ -21,53 +19,17 @@ def response(r):
 	sys.stdout.write("%s\n" % r)
 	sys.stdout.flush()
 
-def findbrowseidforuser(url):
+def queryYoutubeServer(url):
 	try:
 		#httplib2.debuglevel=4
 		h = httplib2.Http(disable_ssl_certificate_validation=False)
 
 		r, content = h.request(url, "GET")
-#vnd.youtube://user/UCXuqSBlHAE6Xw-yeJA0Tunw
-		match = re.compile('"vnd.youtube://user/([^"]+)"').findall(content)
-		if match:
-			return match[0]
-		else:
-			logger.error("Could not find browseId for url " + url)
-			return ""
+		return content
 	except Exception as e:
 		print e
 		logger.error("Failed to download url " + url)
 		return ""
-
-def findchannelidforwatch(url):
-	try:
-		#httplib2.debuglevel=4
-		h = httplib2.Http(disable_ssl_certificate_validation=False)
-
-		r, content = h.request(url, "GET")
-
-		match = re.compile('"ucid":"([^"]+)"').findall(content)
-		if match:
-			return match[0]
-		else:
-			logger.error("Could not find ucid for url " + url)
-			return ""
-	except Exception as e:
-		print e
-		logger.error("Failed to download url " + url)
-		return ""
-
-users = list()
-channels = list()
-with open(dir_path + '/youtube.whitelist.txt') as f:
-    for line in f:
-        if line.startswith("https://"):
-			user = line.strip()
-			channel = findbrowseidforuser(user)
-			if channel != "":
-				logger.info("Adding user " + user + " with channel " + channel)
-				users.append(user)
-				channels.append(channel)
 
 while True:
 	try:
@@ -76,24 +38,15 @@ while True:
 		if line == "":
 			exit()
 		elif line.startswith("https://www.youtube.com/user/"):
-			stripped_line = line[:line.find('?')] if '?' in line else line
-			if stripped_line in users:
-				logger.info("Valid user: " + line)
-				response("OK")
-			else:
-				logger.info("Invalid user: " + line)
-				response("ERR")
+			user = line[line.find('/user/'):]
+			user = user[6:]
+			reply = queryYoutubeServer("http://localhost:9999/user/" + user)
+			response(reply)
 		elif line.startswith("https://www.youtube.com/watch?"):
-			dcid = findchannelidforwatch(line)
-			if dcid != "":
-				if dcid in channels:
-					logger.info("Valid Channel for " + line)
-					response("OK")
-				else:
-					logger.error("Invalid Channel for " + line)
-					response("ERR")
-			else:
-				response("ERR")
+			watch = line[line.find('?v='):]
+			watch = user[3:]
+			reply = queryYoutubeServer("http://localhost:9999/watch/" + watch)
+			response(reply)
 		else:
 			response("ERR")
 	except Exception as e:

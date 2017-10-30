@@ -12,6 +12,20 @@ import logging
 import threading
 from sys import argv
 
+class ThreadSafeDict(dict) :
+    def __init__(self, * p_arg, ** n_arg) :
+        dict.__init__(self, * p_arg, ** n_arg)
+        self._lock = threading.Lock()
+
+    def __enter__(self) :
+        self._lock.acquire()
+        return self
+
+    def __exit__(self, type, value, traceback) :
+        self._lock.release()
+
+WATCH_CACHE = ThreadSafeDict()
+
 PORT = 8080
 dir_path = os.path.dirname(os.path.realpath(__file__))
 
@@ -23,8 +37,10 @@ formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(messag
 ch.setFormatter(formatter)
 logger.addHandler(ch)
 
-def findchannelidforwatch(url):
+def findchannelidforwatch(watch):
 	try:
+		url = 'https://www.youtube.com/watch?v=' + watch
+		logger.info("Finding channel id for URL: " + url)
 		#httplib2.debuglevel=4
 		h = httplib2.Http(disable_ssl_certificate_validation=False)
 
@@ -32,6 +48,7 @@ def findchannelidforwatch(url):
 
 		match = re.compile('"ucid":"([^"]+)"').findall(content)
 		if match:
+			logger.info("Found ucid: " + match[0])
 			return match[0]
 		else:
 			logger.error("Could not find ucid for url " + url)
@@ -50,19 +67,19 @@ def finduser(url):
 		r, content = h.request(url, "GET")
 #vnd.youtube://user/UCXuqSBlHAE6Xw-yeJA0Tunw
 #<meta name="twitter:image" content="https://yt3.ggpht.com/-QGhAvSy7npM/AAAAAAAAAAI/AAAAAAAAAAA/Uom6Bs6gR9Y/s900-c-k-no-mo-rj-c0xffffff/photo.jpg">
-		match = re.compile('<meta name="og:image" content="([^"]+)"').findall(content)
+		match = re.compile('<meta property="og:image" content="([^"]+)"').findall(content)
 		if match:
 			uservars.update({'photo':match[0]})
 		else:
 			logger.error("Could not find photo for user " + url)
 
-		match = re.compile('<meta name="og:title" content="([^"]+)"').findall(content)
+		match = re.compile('<meta property="og:title" content="([^"]+)"').findall(content)
 		if match:
 			uservars.update({'title':match[0]})
 		else:
 			logger.error("Could not find title for user " + url)
 
-		match = re.compile('<meta name="og:description" content="([^"]+)"').findall(content)
+		match = re.compile('<meta property="og:description" content="([^"]+)"').findall(content)
 		if match:
 			uservars.update({'description':match[0]})
 		else:
@@ -72,6 +89,9 @@ def finduser(url):
 		if match:
 			uservars.update({'channel':match[0]})
 
+			user = line[url.find('/user/'):]
+			user = user[6:]
+			uservars.update({'user':user.strip()})
 			return uservars
 		else:
 			logger.error("Could not find channel id for user " + url)
@@ -90,25 +110,14 @@ with open(dir_path + '/youtube.whitelist.txt') as f:
 			user = line.strip()
 			userdetails = finduser(user)
 			if userdetails != None:
-				logger.info("Adding user " + user)
-				userlist.append(user)
+				username = userdetails.get('user')
+				logger.info("Adding user " + username)
+				userlist.append(username)
 				
 				channel = userdetails.get('channel')
 
 				channellist.append(userdetails.get('channel'))
 				users.update({user:userdetails})
-
-class ThreadSafeDict(dict) :
-	def __init__(self, * p_arg, ** n_arg) :
-		dict.__init__(self, * p_arg, ** n_arg)
-		self._lock = threading.Lock()
-
-	def __enter__(self) :
-		self._lock.acquire()
-		return self
-
-	def __exit__(self, type, value, traceback) :
-		self._lock.release()
 
 class ThreadingSimpleServer(ThreadingMixIn, HTTPServer):
 	allow_reuse_address = True
@@ -138,23 +147,59 @@ class HttpRequestHandler(BaseHTTPRequestHandler):
 		self.send_header('Content-type', 'text/html; charset=UTF-8')
 		self.end_headers()
 
-	def _do_json_get(self):
-		path = urlparse.urlparse(self.path)
-		if path.startswith('/channel/'):
-			user = path.path[6:]
+	# /user/XXXXX
+	def _do_get_user(self, path):
+		user = path[6:]
 
+		logger.info("User is " + user)
+		self.send_response(200)
+		self.send_header('Content-type', 'text/plain; charset=UTF-8')
+		self.end_headers()
+
+		if user in userlist:
+			self.wfile.write("OK")
+		else:
+			self.wfile.write("ERR")
+	# /watch/XXXXX
+	def _do_get_watch(self, path):
+		watch = path[7:]
+
+		logger.info("Watch is " + watch)
+		self.send_response(200)
+		self.send_header('Content-type', 'text/plain; charset=UTF-8')
+		self.end_headers()
+
+		try:
+			with WATCH_CACHE as w:
+				if watch not in w:
+					ucid = findchannelidforwatch(watch)
+					if ucid != "":
+						w[watch] = ucid
+				
+				if watch in w:
+					ucid = w[watch]
+					if ucid in channellist:
+						self.wfile.write("OK")
+					else:
+						self.wfile.write("ERR")
+				else:
+					self.wfile.write("BH")
+		except Exception as e:
+			logger.error("Error " + str(e))
+			self.wfile.write("BH")
+			
 	def do_GET(self):
 		path = urlparse.urlparse(self.path)
 		query = urlparse.parse_qs(path.query)
-
-		print 'Path is ' + path.path
 
 		if path.path[1:].endswith(".ico"):
 			self._output_file(path.path[1:], 'image/x-icon')
 		elif path.path[1:].endswith(".png"):
 			self._output_file(path.path[1:], 'image/png')
-		elif path.path != '/':
-			self._do_json_get()
+		elif path.path.startswith("/user/"):
+			self._do_get_user(path.path)
+		elif path.path.startswith("/watch/"):
+			self._do_get_watch(path.path)
 		else:
 			self._set_headers()
 
